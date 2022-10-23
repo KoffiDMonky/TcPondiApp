@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,44 +17,38 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Categories from './Components/Categories';
 
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+// /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
+//  * LTI update could not be added via codemod */
+// const Section = ({children, title}): Node => {
+//   const isDarkMode = useColorScheme() === 'dark';
+//   return (
+//     <View style={styles.sectionContainer}>
+//       <Text
+//         style={[
+//           styles.sectionTitle,
+//           {
+//             color: isDarkMode ? Colors.white : Colors.black,
+//           },
+//         ]}>
+//         {title}
+//       </Text>
+//       <Text
+//         style={[
+//           styles.sectionDescription,
+//           {
+//             color: isDarkMode ? Colors.light : Colors.dark,
+//           },
+//         ]}>
+//         {children}
+//       </Text>
+//     </View>
+//   );
+// };
 
-const App: () => Node = () => {
+const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -68,37 +61,52 @@ const App: () => Node = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      {/* <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}> */}
-          <Text>TC Pondi</Text>
-          <Categories />
+      <View style={styles.sectionContainer}>
         <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+          style={[
+            styles.sectionTitle,
+            {color: isDarkMode ? Colors.white : Colors.black},
+          ]}>
+          <Text style={styles.title}> TC Pondi</Text>
         </View>
-      {/* </ScrollView> */}
+
+        <View
+          style={[
+            styles.sectionDescription,
+            {
+              color: isDarkMode ? Colors.light : Colors.dark,
+            },
+          ]}>
+          <Categories style={styles.categories}/>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+    // marginTop: 32,
+    paddingHorizontal: 10,
+    height: '100%',
   },
   sectionTitle: {
-    fontSize: 24,
+    flex: 2,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 34,
     fontWeight: '600',
+    textAlign: 'center',
   },
   sectionDescription: {
-    marginTop: 8,
+    // marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
+    flex: 12,
   },
-  highlight: {
-    fontWeight: '700',
+  categories: {
+    height: '100%'
   },
 });
 

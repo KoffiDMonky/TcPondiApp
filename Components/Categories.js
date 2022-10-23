@@ -8,11 +8,11 @@ export default Categories = () => {
   const [data, setData] = useState([]);
 
   const cate = [{id : 0 , libelle : "Garçons"}, 
-                {id : 1 , libelle : "Fille"}, 
+                {id : 1 , libelle : "Filles"}, 
                 {id : 2 , libelle : "Hommes"}, 
                 {id : 3 , libelle : "Femmes"}, 
-                {id : 4 , libelle : "Hommes"}, 
-                {id : 5 , libelle : "Femmes"}]
+                {id : 4 , libelle : "Hommes+"}, 
+                {id : 5 , libelle : "Femmes+"}]
 
 
   const getTcPondi = async () => {
@@ -26,8 +26,6 @@ export default Categories = () => {
         year = new Date().getFullYear() + 1;
       }
 
-      //console.log('month', month);
-      //console.log('year', year);
       const response = await fetch('https://gstennis.azurewebsites.net/api/equipes?codeClub=52560056&millesime='+ year);
       const json = await response.json();
       setData(json);
@@ -43,9 +41,13 @@ export default Categories = () => {
   }, []);
 
   return (
-    <View style={{ flex: 1, padding: 24 }}>
+    <View style={{ flex: 1, padding: 24}}>
       {isLoading ? <ActivityIndicator/> : (
         <FlatList
+        numColumns={2}
+        style={{
+          flexGrow: 0
+        }}
           data={cate}
           keyExtractor={({ id }, index) => id}
           renderItem={({ item }) => (
