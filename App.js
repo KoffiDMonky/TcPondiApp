@@ -6,10 +6,9 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -19,41 +18,71 @@ import {
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Categories from './Components/Categories';
-
-// /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
-//  * LTI update could not be added via codemod */
-// const Section = ({children, title}): Node => {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   return (
-//     <View style={styles.sectionContainer}>
-//       <Text
-//         style={[
-//           styles.sectionTitle,
-//           {
-//             color: isDarkMode ? Colors.white : Colors.black,
-//           },
-//         ]}>
-//         {title}
-//       </Text>
-//       <Text
-//         style={[
-//           styles.sectionDescription,
-//           {
-//             color: isDarkMode ? Colors.light : Colors.dark,
-//           },
-//         ]}>
-//         {children}
-//       </Text>
-//     </View>
-//   );
-// };
+import Team from './Components/Team';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const cate = [
+    {id: 0, libelle: 'Garçons'},
+    {id: 1, libelle: 'Filles'},
+    {id: 2, libelle: 'Hommes'},
+    {id: 3, libelle: 'Femmes'},
+    {id: 4, libelle: 'Hommes+'},
+    {id: 5, libelle: 'Femmes+'},
+  ];
+
+  const team = [
+    {id: 0, libelle: 'TC Pondi 1'},
+    {id: 1, libelle: 'TC Pondi 2'},
+    {id: 2, libelle: 'TC Pondi 3'},
+    {id: 3, libelle: 'TC Pondi 4'},
+    {id: 4, libelle: 'TC Pondi 5'},
+    {id: 5, libelle: 'TC Pondi 6'},
+  ];
+
+  const [showTeam, setShowTeam] = useState(false);
+
+  const showTeamState = (bool) => {
+    setShowTeam(bool);
+  };
+
+  const [categorieTeam, setCategorieTeam] = useState('');
+  const shareCategorieTeam = (option) => {
+    setCategorieTeam(option);
+  };
+
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const getTcPondi = async () => {
+    try {
+      const month = new Date().getMonth();
+      let year;
+
+      if (month < 9) {
+        year = new Date().getFullYear();
+      } else {
+        year = new Date().getFullYear() + 1;
+      }
+      const response = await fetch(
+        'https://gstennis.azurewebsites.net/api/equipes?codeClub=52560056&millesime=' +
+          year,
+      );
+      const json = await response.json();
+      setData(json);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getTcPondi();
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -77,7 +106,12 @@ const App = () => {
               color: isDarkMode ? Colors.light : Colors.dark,
             },
           ]}>
-          <Categories style={styles.categories}/>
+
+          {showTeam ? (
+            <Team style={styles.categories} team={team} showTeamState={showTeamState} categorieTeam={categorieTeam} />
+          ) : (
+            <Categories style={styles.categories} isLoading={isLoading} cate={cate} showTeamState={showTeamState} shareCategorieTeam={shareCategorieTeam} />
+          )}
         </View>
       </View>
     </SafeAreaView>
@@ -106,7 +140,7 @@ const styles = StyleSheet.create({
     flex: 12,
   },
   categories: {
-    height: '100%'
+    height: '100%',
   },
 });
 

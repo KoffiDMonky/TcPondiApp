@@ -1,18 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 export default TouchableItem = props => {
   const item = props.item;
+  const showTeamState = props.showTeamState;
 
+  const heightItem = props.height;
+const shareCategorieTeam = props.shareCategorieTeam;
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={[styles.card , { height: heightItem }]}
       onPress={() => {
-        console.log('toto');
+        showTeamState(true);
+        shareCategorieTeam(item.libelle);
       }}>
       <View style={styles.container}>
         <Text style={styles.title}>{item.libelle}</Text>
-        <Icon name='wind' size={100} color='#000000'/>
+        {/* <Icon name='wind' size={100} color='#000000'/> */}
       </View>
     </TouchableOpacity>
   );
@@ -21,12 +25,12 @@ export default TouchableItem = props => {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    // backgroundColor: '#F6F6F6',
-    backgroundColor: 'orange',
+    backgroundColor: '#F6F6F6',
+    // backgroundColor: 'orange',
     borderColor: '#000000',
     color: '#20232a',
     margin: 5,
-    height: 170,
+    // height: heightItem,
     borderWidth: 2,
     borderRadius: 15,
   },
