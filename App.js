@@ -27,12 +27,12 @@ const App = () => {
   };
 
   const cate = [
-    {id: 0, libelle: 'Garçons'},
-    {id: 1, libelle: 'Filles'},
-    {id: 2, libelle: 'Hommes'},
-    {id: 3, libelle: 'Femmes'},
-    {id: 4, libelle: 'Hommes+'},
-    {id: 5, libelle: 'Femmes+'},
+    {id: 0, libelle: 'Garçons', item : 'garçons'},
+    {id: 1, libelle: 'Filles', item : 'filles'},
+    {id: 2, libelle: 'Hommes', item : 'hommes'},
+    {id: 3, libelle: 'Femmes', item : 'femmes'},
+    {id: 4, libelle: 'Hommes+', item : 'hommesPlus'},
+    {id: 5, libelle: 'Femmes+', item : 'femmesPlus'},
   ];
 
   const team = [
@@ -57,6 +57,7 @@ const App = () => {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
   const getTcPondi = async () => {
     try {
       const month = new Date().getMonth();
@@ -84,6 +85,29 @@ const App = () => {
     getTcPondi();
   }, []);
 
+  let categoriesData;
+
+  switch (categorieTeam) {
+    case 'Garçons':
+      categoriesData = data.garcons;
+      break;
+    case 'Filles':
+      categoriesData =  data.filles;
+      break;
+    case 'Hommes':
+      categoriesData =  data.hommes;
+      break;
+    case 'Femmes':
+      categoriesData =  data.femmes;
+      break;
+    case 'Hommes+':
+      categoriesData =  data.hommesplus;
+      break;
+    case 'Femmes+':
+      categoriesData =  data.femmesplus;
+      break;
+  }
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -108,9 +132,9 @@ const App = () => {
           ]}>
 
           {showTeam ? (
-            <Team style={styles.categories} team={team} showTeamState={showTeamState} categorieTeam={categorieTeam} />
+            <Team style={styles.categories} data={data} team={team} showTeamState={showTeamState} categorieTeam={categorieTeam} categoriesData={categoriesData} />
           ) : (
-            <Categories style={styles.categories} isLoading={isLoading} cate={cate} showTeamState={showTeamState} shareCategorieTeam={shareCategorieTeam} />
+            <Categories style={styles.categories} isLoading={isLoading} cate={cate} showTeamState={showTeamState} shareCategorieTeam={shareCategorieTeam} categoriesData={categoriesData}/>
           )}
         </View>
       </View>

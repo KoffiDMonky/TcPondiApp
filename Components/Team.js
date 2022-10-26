@@ -3,10 +3,11 @@ import {StyleSheet, Text, FlatList, View, Button} from 'react-native';
 import TouchableItem from './TouchableItem';
 
 export default Team = props => {
+  const data = props.data;
   const team = props.team;
   const showTeamState = props.showTeamState;
-
   const categorieTeam = props.categorieTeam;
+  const categoriesData = props.categoriesData;
 
   return (
     <View style={styles.container}>
