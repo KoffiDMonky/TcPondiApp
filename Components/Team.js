@@ -3,8 +3,6 @@ import {StyleSheet, Text, FlatList, View, Button} from 'react-native';
 import TouchableItem from './TouchableItem';
 
 export default Team = props => {
-  const data = props.data;
-  const team = props.team;
   const showTeamState = props.showTeamState;
   const categorieTeam = props.categorieTeam;
   const categoriesData = props.categoriesData;
@@ -17,9 +15,9 @@ export default Team = props => {
         style={{
           flexGrow: 0,
         }}
-        data={team}
+        data={categoriesData}
         keyExtractor={({id}, index) => id}
-        renderItem={({item}) => <TouchableItem height={70} item={item} />}
+        renderItem={({item}) => <TouchableItem height={70} teams={item} />}
       />
     </View>
   );
