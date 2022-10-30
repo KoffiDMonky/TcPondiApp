@@ -17,7 +17,7 @@ export default Team = props => {
         }}
         data={categoriesData}
         keyExtractor={({id}, index) => id}
-        renderItem={({item}) => <TouchableItem height={70} teams={item} />}
+        renderItem={({item}) => <TouchableItem height={400} teams={item} />}
       />
     </View>
   );

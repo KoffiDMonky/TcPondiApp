@@ -61,10 +61,6 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    getTcPondi();
-  }, []);
-
   //Données d'une catégorie
   let categoriesData = [];
   //Nom de la catégorie
@@ -141,6 +137,10 @@ const App = () => {
     default:
       categoriesData = [];
   }
+
+  useEffect(() => {
+    getTcPondi();
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
