@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   sectionContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 1,
     height: '100%',
   },
   sectionTitle: {

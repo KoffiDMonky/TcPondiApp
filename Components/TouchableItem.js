@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 export default TouchableItem = props => {
   let categorie;
@@ -9,12 +9,17 @@ export default TouchableItem = props => {
   const showTeamState = props.showTeamState;
   const heightItem = props.height;
   const shareCategorieTeam = props.shareCategorieTeam;
+  const showDetailsState = props.showDetailsState;
   if (props.item) {
     categorie = props.item;
     icon = props.item.icon;
   }
   if (props.teams) {
     teams = props.teams;
+
+    const setTeamParameter = props.setTeamParameter;
+
+    
 
     const displayPhases = [];
     const phaseLength = teams.phases.length;
@@ -87,6 +92,7 @@ export default TouchableItem = props => {
           <Text style={styles.title}>{phase.phase.phase.libelle}</Text>
           <Text style={styles.title}>{phase.phase.poule.nom}</Text>
           <View style={styles.results}>{results}</View>
+          {/* <Button title="Détails" onPress={() => showDetailsState(true)} /> */}
         </View>,
       );
     }
@@ -95,7 +101,8 @@ export default TouchableItem = props => {
       <TouchableOpacity
         style={[styles.card, {height: heightItem}]}
         onPress={() => {
-          console.log('toto');
+          showDetailsState(true);
+          setTeamParameter(teams.id, teams.homologation.id, teams.division.id)
         }}>
         <View style={styles.container}>
           <Text style={styles.title}>{teams.nom}</Text>
@@ -135,6 +142,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderWidth: 2,
     borderRadius: 15,
+    padding: 15
   },
   container: {
     margin: 5,
