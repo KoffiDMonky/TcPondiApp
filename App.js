@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingHorizontal: 1,
-    height: '100%',
+    height: '100%'
   },
   sectionTitle: {
     flex: 2,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   sectionDescription: {
     fontSize: 18,
     fontWeight: '400',
-    flex: 12,
+    flex: 12
   },
   categories: {
     height: '100%',

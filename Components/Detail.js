@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Accordeon from './Accordeon';
 
 export default Detail = props => {
   const setShowDetails = props.setShowDetails;
@@ -35,7 +36,20 @@ export default Detail = props => {
     }
   };
 
-  console.log(data);
+  const phases = data.phases;
+  const items = [];
+
+  if (phases) {
+    for (const [i, phase] of phases.entries()) {
+      items.push(
+        <Accordeon
+          key={i}
+          title={phase.phase.phase.libelle}
+          rencontres={phase.rencontres}
+        />,
+      );
+    }
+  }
 
   const renderTabBar = props => (
     <TabBar
@@ -48,8 +62,9 @@ export default Detail = props => {
   const FirstRoute = () => (
     <View style={{flex: 1, backgroundColor: Colors.lighter}}>
       <Button title="retour" onPress={() => setShowDetails(false)} />
-      <Text>Rencontre</Text>
-      <Text>Division:{data.division}</Text>
+      <Text>{data.hLib}</Text>
+      <Text>{data.division}</Text>
+      {items}
     </View>
   );
 
@@ -87,7 +102,7 @@ export default Detail = props => {
   return (
     <View style={{flex: 1, padding: 24}}>
       {isLoading ? (
-        <ActivityIndicator />
+        <ActivityIndicator size={'large'} />
       ) : (
         // <View>
         //   <Button title="retour" onPress={() => setShowDetails(false)} />

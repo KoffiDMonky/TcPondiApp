@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   container:(showDetails) => ({
     flex: 1,
     padding: showDetails === true ?  0 : 24,
-    justifyContent: 'center',
+    justifyContent: 'center'
   }),
   text: {
     textAlign: 'center',

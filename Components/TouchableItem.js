@@ -19,8 +19,6 @@ export default TouchableItem = props => {
 
     const setTeamParameter = props.setTeamParameter;
 
-    
-
     const displayPhases = [];
     const phaseLength = teams.phases.length;
 
@@ -118,7 +116,6 @@ export default TouchableItem = props => {
       <TouchableOpacity
         style={[styles.card, {height: heightItem}]}
         onPress={() => {
-          console.log('toto');
           showTeamState(true);
           shareCategorieTeam(categorie.libelle);
         }}>

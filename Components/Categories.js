@@ -11,9 +11,9 @@ export default Categories = props => {
   // const categoriesData = props.categoriesData;
 
   return (
-    <View style={{flex: 1, padding: 24}}>
+    <View style={{flex: 1, padding: 12}}>
       {isLoading ? (
-        <ActivityIndicator />
+        <ActivityIndicator size ={'large'}/>
       ) : (
         <FlatList
           numColumns={2}
