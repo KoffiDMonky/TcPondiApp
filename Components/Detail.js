@@ -46,6 +46,7 @@ export default Detail = props => {
           key={i}
           title={phase.phase.phase.libelle}
           rencontres={phase.rencontres}
+          detailsEquipes={phase.detailsEquipes}
         />,
       );
     }

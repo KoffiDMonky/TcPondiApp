@@ -15,8 +15,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 export default Accordeon = props => {
   const title = props.title;
   const rencontres = props.rencontres;
+  const detailsEquipes = props.detailsEquipes;
+
   //   console.log(rencontres);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -43,7 +45,11 @@ export default Accordeon = props => {
   ];
 
   const [displayDate, setDisplayDate] = useState(true);
-  const [previousDate, setPreviousDate] = useState();
+
+  Object.filter = (obj, predicate) =>
+    Object.keys(obj)
+      .filter(key => predicate(obj[key]))
+      .reduce((res, key) => ((res[key] = obj[key]), res), {});
 
   const items = [];
 
@@ -53,15 +59,29 @@ export default Accordeon = props => {
     const month = monthNames[serverDate.getUTCMonth()];
     const year = serverDate.getFullYear();
     const date = (day + ' ' + month + ' ' + year).toString();
+    if (
+      rencontres[i - 1] !== undefined &&
+      rencontres[i - 1].dateTheorique === rencontre.dateTheorique
+    ) {
+      console.log('rencontre', rencontres[i - 1].dateTheorique);
+      // hideDate(false);
+    }
+
+    const teamOneName = detailsEquipes.filter(
+      equipe => equipe.idEquipe === rencontre.equipe1.id,
+    );
+    const teamTwoName = detailsEquipes.filter(
+      equipe => equipe.idEquipe === rencontre.equipe2.id,
+    );
 
     items.push(
       <View key={i} style={{backgroundColor: 'red'}}>
         {displayDate && <Text>{date}</Text>}
         <View style={{flexDirection: 'row'}}>
-          <Text>{rencontre.equipe1.codeClub} </Text>
+          <Text>{teamOneName[0].club.nom} </Text>
           <Text>{rencontre.score1}-</Text>
           <Text>{rencontre.score2} </Text>
-          <Text>{rencontre.equipe2.codeClub}</Text>
+          <Text>{teamTwoName[0].club.nom} </Text>
         </View>
       </View>,
     );
