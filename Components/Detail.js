@@ -4,6 +4,7 @@ import {
   FlatList,
   Text,
   View,
+  ScrollView,
   Button,
   useWindowDimensions,
 } from 'react-native';
@@ -38,19 +39,7 @@ export default Detail = props => {
 
   const phases = data.phases;
   const items = [];
-
-  if (phases) {
-    for (const [i, phase] of phases.entries()) {
-      items.push(
-        <Accordeon
-          key={i}
-          title={phase.phase.phase.libelle}
-          rencontres={phase.rencontres}
-          detailsEquipes={phase.detailsEquipes}
-        />,
-      );
-    }
-  }
+  const detailsEquipes = [];
 
   const renderTabBar = props => (
     <TabBar
@@ -61,30 +50,30 @@ export default Detail = props => {
   );
 
   const FirstRoute = () => (
-    <View style={{flex: 1, backgroundColor: Colors.lighter}}>
+    <ScrollView style={{flex: 1, backgroundColor: Colors.lighter}}>
       <Button title="retour" onPress={() => setShowDetails(false)} />
       <Text>{data.hLib}</Text>
       <Text>{data.division}</Text>
       {items}
-    </View>
+    </ScrollView>
   );
 
   const SecondRoute = () => (
-    <View style={{flex: 1, backgroundColor: Colors.lighter}}>
-      <Text>Equipes</Text>
-    </View>
+    <ScrollView style={{flex: 1, backgroundColor: Colors.lighter}}>
+      {detailsEquipes}
+    </ScrollView>
   );
 
-  const thirdRoute = () => (
-    <View style={{flex: 1, backgroundColor: Colors.lighter}}>
+  const ThirdRoute = () => (
+    <ScrollView style={{flex: 1, backgroundColor: Colors.lighter}}>
       <Text>Classement</Text>
-    </View>
+    </ScrollView>
   );
 
   const renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
-    third: thirdRoute,
+    third: ThirdRoute,
   });
 
   const layout = useWindowDimensions();
@@ -95,6 +84,38 @@ export default Detail = props => {
     {key: 'second', title: 'Equipes'},
     {key: 'third', title: 'Classement'},
   ]);
+
+  if (phases) {
+    for (const [i, phase] of phases.entries()) {
+      if (index === 0) {
+        items.push(
+          <Accordeon
+            key={i}
+            tab={index}
+            title={phase.phase.phase.libelle}
+            rencontres={phase.rencontres}
+            detailsEquipes={phase.detailsEquipes}
+          />,
+        );
+      }
+
+      console.log('detailsEquipes',phase);
+
+      if (index === 1 && phase.detailsEquipes !== undefined) {
+        for (const [i, team] of phase.detailsEquipes.entries())
+        detailsEquipes.push(
+          <Accordeon
+            key={i}
+            tab={index}
+            title={team.club.nom}
+            detailsEquipe={team}
+          />,
+        );
+
+
+      }
+    }
+  }
 
   useEffect(() => {
     getDetail();
