@@ -79,15 +79,18 @@ export default Accordeon = props => {
       );
 
       meets.push(
-        <View key={i}>
+        <View key={i} style={{flex: 1}}>
           {displayDate && (
             <Text style={{marginBottom: 5, marginTop: 15}}>{date}</Text>
           )}
-          <View style={{flexDirection: 'row'}}>
-            <Text>{teamOneName[0].club.nom} </Text>
-            <Text>{rencontre.score1}-</Text>
-            <Text>{rencontre.score2} </Text>
-            <Text>{teamTwoName[0].club.nom} </Text>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{flex: 3, textAlign:'right'}}>{teamOneName[0].club.nom}</Text>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}} >
+              <Text>{rencontre.score1}</Text>
+              <Text>-</Text>
+              <Text>{rencontre.score2} </Text>
+            </View>
+            <Text style={{flex: 3, textAlign:'left'}}>{teamTwoName[0].club.nom} </Text>
           </View>
         </View>,
       );
@@ -140,7 +143,7 @@ export default Accordeon = props => {
     case 0:
       if (rencontres) {
         return (
-          <View>
+          <View style={{flex: 5}}>
             <TouchableOpacity style={styles.row} onPress={() => toggleExpand()}>
               <Text style={[styles.title, styles.font]}>{title}</Text>
               <Icon
@@ -150,7 +153,7 @@ export default Accordeon = props => {
               />
             </TouchableOpacity>
             <View style={styles.parentHr} />
-            {expanded && <ScrollView style={styles.child}>{meets}</ScrollView>}
+            {expanded && <View style={styles.child}>{meets}</View>}
           </View>
         );
       } else {
@@ -160,7 +163,7 @@ export default Accordeon = props => {
     case 1:
       if (detailsEquipe) {
         return (
-          <View>
+          <View style={{height: 'auto'}}>
             <TouchableOpacity style={styles.row} onPress={() => toggleExpand()}>
               <Text style={[styles.title, styles.font]}>{title}</Text>
               <Icon
@@ -172,10 +175,16 @@ export default Accordeon = props => {
             <View style={styles.parentHr} />
             {expanded && (
               <View style={styles.child}>
-                <Text>{title} - {detailsEquipe.club.code}</Text>
+                <Text>
+                  {title} - {detailsEquipe.club.code}
+                </Text>
                 <View>
-                  <Text>{detailsEquipe.club.correspondantClub.adresse1Corresp}</Text>
-                  <Text>{detailsEquipe.club.correspondantClub.adresse2Corresp}</Text>
+                  <Text>
+                    {detailsEquipe.club.correspondantClub.adresse1Corresp}
+                  </Text>
+                  <Text>
+                    {detailsEquipe.club.correspondantClub.adresse2Corresp}
+                  </Text>
                   <Text>{detailsEquipe.club.correspondantClub.nomCorresp}</Text>
                 </View>
                 <Text>
@@ -220,6 +229,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   item: {
+    flex: 1,
     backgroundColor: '#f9c2ff',
     padding: 20,
     marginVertical: 8,
@@ -227,5 +237,9 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 32,
     backgroundColor: '#fff',
+  },
+  child: {
+    flex: 1,
+    marginBottom: 20
   },
 });

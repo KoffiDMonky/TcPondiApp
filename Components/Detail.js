@@ -7,10 +7,12 @@ import {
   ScrollView,
   Button,
   useWindowDimensions,
+  StyleSheet,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Accordeon from './Accordeon';
+import Ranking from './Ranking';
 
 export default Detail = props => {
   const setShowDetails = props.setShowDetails;
@@ -22,7 +24,7 @@ export default Detail = props => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  //Récupère les données
+  //Récupère les données du club
   const getDetail = async () => {
     try {
       const response = await fetch(
@@ -37,20 +39,32 @@ export default Detail = props => {
     }
   };
 
+  //Données des différentes phases
   const phases = data.phases;
+
+  //Tableau d'accordeon contenant les rencontres de chaque phases
   const items = [];
+
+  //Tableau d'accordeon contenant le détail des équipes
   const detailsEquipes = [];
 
+  //Tableau d'accordeon contenant le classement
+  const teamsRanking = [];
+
+  //------------------------------ Code de la TabBar (Début) ------------------------------//
+  //Rendu de la tabBar
   const renderTabBar = props => (
     <TabBar
       {...props}
-      indicatorStyle={{backgroundColor: 'white'}}
-      style={{backgroundColor: '#91BF2C'}}
+      indicatorStyle={{backgroundColor: Colors.darker}}
+      style={{backgroundColor: Colors.lighter}}
+      labelStyle={{color: Colors.darker}}
     />
   );
 
+  //Contenu du tab 1 : rencontres
   const FirstRoute = () => (
-    <ScrollView style={{flex: 1, backgroundColor: Colors.lighter}}>
+    <ScrollView style={styles.tabContainer}>
       <Button title="retour" onPress={() => setShowDetails(false)} />
       <Text>{data.hLib}</Text>
       <Text>{data.division}</Text>
@@ -58,15 +72,16 @@ export default Detail = props => {
     </ScrollView>
   );
 
+  //Contenu du tab 2 : Equipes
   const SecondRoute = () => (
-    <ScrollView style={{flex: 1, backgroundColor: Colors.lighter}}>
-      {detailsEquipes}
-    </ScrollView>
+    <ScrollView style={styles.tabContainer}>{detailsEquipes}</ScrollView>
   );
 
+  //Contenu du tab 3 : Classement
   const ThirdRoute = () => (
-    <ScrollView style={{flex: 1, backgroundColor: Colors.lighter}}>
+    <ScrollView style={styles.tabContainer}>
       <Text>Classement</Text>
+      {teamsRanking}
     </ScrollView>
   );
 
@@ -85,8 +100,12 @@ export default Detail = props => {
     {key: 'third', title: 'Classement'},
   ]);
 
+  //------------------------------ Code de la TabBar (FIN) ------------------------------//
+
+  //On parcourt le tableau de phases
   if (phases) {
     for (const [i, phase] of phases.entries()) {
+      //Si l'on est dans le tab rencontres, on mets l'accordéon dans le tableau items
       if (index === 0) {
         items.push(
           <Accordeon
@@ -99,20 +118,17 @@ export default Detail = props => {
         );
       }
 
-      console.log('detailsEquipes',phase);
-
+      //Si l'on est dans le tab equipes et que le détail des équipes n'est pas indefini, on mets l'accordeon dans le tableau détailsEquipes
       if (index === 1 && phase.detailsEquipes !== undefined) {
         for (const [i, team] of phase.detailsEquipes.entries())
-        detailsEquipes.push(
-          <Accordeon
-            key={i}
-            tab={index}
-            title={team.club.nom}
-            detailsEquipe={team}
-          />,
-        );
-
-
+          detailsEquipes.push(
+            <Accordeon
+              key={i}
+              tab={index}
+              title={team.club.nom}
+              detailsEquipe={team}
+            />,
+          );
       }
     }
   }
@@ -122,22 +138,25 @@ export default Detail = props => {
   }, [idEquipe, idHomologation, idDivision]);
 
   return (
-    <View style={{flex: 1, padding: 24}}>
+    <View style={{flex: 1}}>
       {isLoading ? (
         <ActivityIndicator size={'large'} />
       ) : (
-        // <View>
-        //   <Button title="retour" onPress={() => setShowDetails(false)} />
-        //   <Text>Rencontre</Text>
-        //   <Text>Division:{data.division}</Text>
-        // </View>
         <TabView
           navigationState={{index, routes}}
           renderScene={renderScene}
           onIndexChange={setIndex}
           renderTabBar={renderTabBar}
+          initialLayout={{width: layout.width, height: layout.height}}
+          style={{flex: 1}}
         />
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  tabContainer: {
+    paddingHorizontal: 20,
+  },
+});

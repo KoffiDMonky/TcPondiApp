@@ -40,9 +40,10 @@ const App = () => {
   //Récupère les données
   const getTcPondi = async () => {
     try {
+
+      //Calcul de l'année
       const month = new Date().getMonth();
       let year;
-
       if (month < 9) {
         year = new Date().getFullYear();
       } else {
@@ -69,6 +70,7 @@ const App = () => {
     setCategorieTeam(option);
   };
 
+  //Les différentes catégories
   const cate = [
     {
       id: 0,
@@ -191,12 +193,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'flex-start',
     justifyContent: 'center',
-    flex: 3,
-    width: '100%'
+    flex: 2,
+    width: '100%',
+    // backgroundColor: 'yellow'
   },
   sectionContainer: {
-    paddingHorizontal: 1,
-    height: '100%'
+    // paddingHorizontal: 1,
+    height: '100%',
+    // backgroundColor: 'orange'
+
   },
   sectionTitle: {
     flex: 2,
@@ -214,6 +219,8 @@ const styles = StyleSheet.create({
   },
   categories: {
     height: '100%',
+    width: '100%',
+    // backgroundColor: 'violet'
   },
   logo: {
     width: 50,

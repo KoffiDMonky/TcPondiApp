@@ -20,7 +20,7 @@ export default TouchableItem = props => {
     const setTeamParameter = props.setTeamParameter;
 
     const displayPhases = [];
-    const phaseLength = teams.phases.length;
+    // const phaseLength = teams.phases.length;
 
     for (const [i, phase] of teams.phases.entries()) {
       const results = [];

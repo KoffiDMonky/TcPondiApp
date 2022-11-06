@@ -7,8 +7,6 @@ export default Categories = props => {
   const showTeamState = props.showTeamState;
   const cate = props.cate;
   const shareCategorieTeam = props.shareCategorieTeam;
-  // const categorieTeam = props.categorieTeam;
-  // const categoriesData = props.categoriesData;
 
   return (
     <View style={{flex: 1, padding: 12}}>

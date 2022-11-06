@@ -8,15 +8,16 @@ export default Team = props => {
   const categorieTeam = props.categorieTeam;
   const categoriesData = props.categoriesData;
 
-  const [idEquipe , setIdEquipe] = useState('');
-  const [idHomologation , setIdHomologation] = useState('');
-  const [idDivision , setIdDivision] = useState('');
+  const [idEquipe, setIdEquipe] = useState('');
+  const [idHomologation, setIdHomologation] = useState('');
+  const [idDivision, setIdDivision] = useState('');
 
-  const setTeamParameter = (idEquipe,idHomologation,idDivision) => {
+  //Défini les paramètres pour charger les données du club
+  const setTeamParameter = (idEquipe, idHomologation, idDivision) => {
     setIdEquipe(idEquipe);
     setIdHomologation(idHomologation);
     setIdDivision(idDivision);
-  }
+  };
 
   //Permet d'afficher le détail des rencontres
   const [showDetails, setShowDetails] = useState(false);
@@ -27,15 +28,18 @@ export default Team = props => {
   return (
     <View style={styles.container(showDetails)}>
       {showDetails ? (
-        <Detail setShowDetails = {setShowDetails} idEquipe = {idEquipe} idHomologation = {idHomologation} idDivision={idDivision} />
+        <Detail
+          setShowDetails={setShowDetails}
+          idEquipe={idEquipe}
+          idHomologation={idHomologation}
+          idDivision={idDivision}
+        />
       ) : (
         <View>
           <Button title="retour" onPress={() => showTeamState(false)} />
           <Text style={styles.text}>{categorieTeam}</Text>
           <FlatList
-            style={{
-              flexGrow: 0,
-            }}
+            style={styles.flatlist}
             data={categoriesData}
             keyExtractor={({id}, index) => id}
             renderItem={({item}) => (
@@ -46,6 +50,8 @@ export default Team = props => {
                 setTeamParameter={setTeamParameter}
               />
             )}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
           />
         </View>
       )}
@@ -54,11 +60,15 @@ export default Team = props => {
 };
 
 const styles = StyleSheet.create({
-  container:(showDetails) => ({
+  container: showDetails => ({
     flex: 1,
-    padding: showDetails === true ?  0 : 24,
-    justifyContent: 'center'
+    padding: showDetails === true ? 0 : 24,
+    justifyContent: 'center',
   }),
+  flatlist: {
+    flexGrow: 0,
+    width: '100%',
+  },
   text: {
     textAlign: 'center',
   },
