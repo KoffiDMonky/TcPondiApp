@@ -12,10 +12,13 @@ import TouchableItem from './TouchableItem';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default Team = props => {
+
+  //Propriété récupérées dans le composant
   const showTeamState = props.showTeamState;
   const categorieTeam = props.categorieTeam;
   const categoriesData = props.categoriesData;
 
+  //Variable d'état des composants
   const [idEquipe, setIdEquipe] = useState('');
   const [idHomologation, setIdHomologation] = useState('');
   const [idDivision, setIdDivision] = useState('');

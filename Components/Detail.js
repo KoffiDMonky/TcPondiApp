@@ -96,12 +96,13 @@ export default Detail = props => {
         options={paramPhases}
         style={{
           borderWidth: 1,
-          borderColor: '#a7a7a7',
+          borderColor: Colors.lighter,
           borderRadius: 5,
           marginVertical: 5,
           padding: 5,
-          color: Colors.darker
+          color: Colors.darker,
         }}
+        textAlign={'center'}
         value={picker}
       />
       {detailsEquipes}
@@ -110,22 +111,21 @@ export default Detail = props => {
 
   //Contenu du tab 3 : Classement
   const ThirdRoute = () => (
-    <ScrollView
-      style={styles.tabContainer}
-      contentContainerStyle={{alignItems: 'center'}}>
+    <ScrollView>
       <Picker
         onChanged={setPicker}
         options={paramPhases}
         style={{
           borderWidth: 1,
-          borderColor: '#a7a7a7',
+          borderColor: Colors.lighter,
           borderRadius: 5,
+          marginTop: 20,
           marginVertical: 5,
+          marginHorizontal: 20,
           padding: 5,
           color: Colors.darker,
-          // backgroundColor: 'yellow'
-          // flex: 1
         }}
+        textAlign={'center'}
         value={picker}
       />
       <Ranking teamsRanking={teamsRanking} />
@@ -176,6 +176,7 @@ export default Detail = props => {
     }
   }
 
+  //Filtre la phase en fonction de la valeur du sélecteur
   if (phases !== undefined) {
     const filterPhase = phases.filter(
       phase => phase.phase.phase.libelle === picker,
@@ -201,20 +202,29 @@ export default Detail = props => {
       for (const [i, phase] of filterPhase.entries()) {
         //Tri du classement
         const sortRanking = phase.classements.sort((a, b) => a.place - b.place);
+        let isClub = false;
 
         for (const [j, team] of sortRanking.entries()) {
+
+          // Permet d'identifier le club
+          const regex = /PONDI/g;
+          const club = team.nom;
+          isPondi = club.match(regex);
+
+          isClub = false;
+          if (isPondi !== null) {
+            isClub = true;
+          }
+
           teamsRanking.push(
             <View
               key={j}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderBottomWidth: 2,
-                paddingVertical: 12,
-              }}>
-              <Text style={[{flex: 1}, styles.textTable]}>N° {team.place}</Text>
-              <Text style={[{flex: 3}, styles.textTable]}>{team.nom}</Text>
-              <Text style={[{flex: 1}, styles.textTable]}>{team.points} pts</Text>
+              style={styles.row(isClub)}>
+              <Text style={[{flex: 1}, styles.textTable(isClub)]}>N° {team.place}</Text>
+              <Text style={[{flex: 3}, styles.textTable(isClub)]}>{team.nom}</Text>
+              <Text style={[{flex: 1}, styles.textTable(isClub)]}>
+                {team.points} pts
+              </Text>
             </View>,
           );
         }
@@ -269,10 +279,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     flex: 1,
-    // flexWrap: 'wrap',
     width: '100%',
-    borderWidth: 2
   },
+  row: (isClub) => ({
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.lighter,
+    paddingVertical: 12,
+    backgroundColor: isClub ? '#A8DAE3' : '#ffffff' ,
+  }),
   subtitleContainer: {
     marginBottom: 15,
   },
@@ -291,12 +307,13 @@ const styles = StyleSheet.create({
     color: Colors.darker,
     fontSize: 15,
     marginLeft: 5,
-    fontWeight: '600'
+    fontWeight: '600',
   },
-  textTable: {
+  textTable: (isClub) => ({
     textAlign: 'center',
-    color: Colors.darker,
+    color: isClub ? '#2292CC' : Colors.darker,
     fontSize: 15,
     marginLeft: 5,
-  },
+    fontWeight: isClub ? '600' : '400',
+  }),
 });

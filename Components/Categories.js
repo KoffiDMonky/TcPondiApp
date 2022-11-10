@@ -10,6 +10,8 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TouchableItem from './TouchableItem';
 
 export default Categories = props => {
+
+  //Propriétés récupérées dans le composant
   const isLoading = props.isLoading;
   const showTeamState = props.showTeamState;
   const cate = props.cate;
@@ -26,7 +28,7 @@ export default Categories = props => {
           style={styles.container}>
           <View style={styles.subtitleContainer}>
             <Text style={styles.subtitle}>
-              Résultats championnats par équipe
+              Résultats championnats par équipes
             </Text>
           </View>
           <FlatList

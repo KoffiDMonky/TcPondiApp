@@ -12,23 +12,28 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default Accordeon = props => {
+
+  //Propriétés récupérées dans le composant
   const tab = props.tab;
   const title = props.title;
   const rencontres = props.rencontres;
   const detailsEquipes = props.detailsEquipes;
   const detailsEquipe = props.detailsEquipe;
 
+  //Ouverture ou fermeture de l'accordéon
   const [expanded, setExpanded] = useState(true);
 
   if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 
+  //Animation de l'ouverture et fermeture de l'accordéon
   const toggleExpand = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpanded(!expanded);
   };
 
+  //Mois de l'années
   const monthNames = [
     'Janvier',
     'Février',
@@ -38,29 +43,44 @@ export default Accordeon = props => {
     'Juin',
     'Juillet',
     'Août',
-    'September',
+    'Septembre',
     'octobre',
     'Novembre',
     'Décembre',
   ];
 
+  //Affichage de la date
   let displayDate = true;
 
+  //Méthode filtrant les objets
   Object.filter = (obj, predicate) =>
     Object.keys(obj)
       .filter(key => predicate(obj[key]))
       .reduce((res, key) => ((res[key] = obj[key]), res), {});
 
+  //Tableau de rencontres
   const meets = [];
 
+  //Permet de déterminier si c'est le club ou non (pour styliser le texte en fonction)
+  let isClub = false;
+
   if (rencontres) {
+
+    //Boucle permettant de récupérer les rencontres
     for (const [i, rencontre] of rencontres.entries()) {
+
+      //Date récupéré sur le serveur
       const serverDate = new Date(rencontre.dateTheorique);
+      //Récupération du jour
       const day = serverDate.getDate();
+      //Récupération et traduction du mois
       const month = monthNames[serverDate.getUTCMonth()];
+      //Récupération de l'année
       const year = serverDate.getFullYear();
+      //Assemblage de la date
       const date = (day + ' ' + month + ' ' + year).toString();
 
+      //Permet d'afficher la date par groupe de rencontre
       if (
         rencontres[i - 1] !== undefined &&
         rencontres[i - 1].dateTheorique === rencontre.dateTheorique
@@ -70,6 +90,7 @@ export default Accordeon = props => {
         displayDate = true;
       }
 
+      //Permet de récupérer le nom de l'équipe dans l'objet detailsEquipes en fonction de son identifiant
       const teamOneName = detailsEquipes.filter(
         equipe => equipe.idEquipe === rencontre.equipe1.id,
       );
@@ -77,11 +98,24 @@ export default Accordeon = props => {
         equipe => equipe.idEquipe === rencontre.equipe2.id,
       );
 
+      //Permet d'identifier si c'est le club ou pas
+      const regex = /PONDI/g;
+      const club1 = teamOneName[0].club.nom;
+      const club2 = teamTwoName[0].club.nom;
+      isPondi1 = club1.match(regex);
+      isPondi2 = club2.match(regex);
+
+      isClub = false;
+      if(isPondi1 !== null || isPondi2 !== null){
+        isClub = true;
+      }
+
+      //On envoie les rencontres dans le tableau meets
       meets.push(
         <View key={i} style={{flex: 1}}>
           {displayDate && <Text style={styles.date}>{date}</Text>}
           <View style={styles.container}>
-            <Text style={[{flex: 3, textAlign: 'right'}, styles.text]}>
+            <Text style={[{flex: 3, textAlign: 'right'}, styles.text(isClub)]}>
               {teamOneName[0].club.nom}
             </Text>
             <View
@@ -91,12 +125,12 @@ export default Accordeon = props => {
                 justifyContent: 'center',
                 margin: 18,
               }}>
-              <Text style={styles.text}>{rencontre.score1}</Text>
-              <Text style={styles.text}>-</Text>
-              <Text style={styles.text}>{rencontre.score2} </Text>
+              <Text style={styles.textResult(isClub)}>{rencontre.score1}</Text>
+              <Text style={styles.textResult(isClub)}>-</Text>
+              <Text style={styles.textResult(isClub)}>{rencontre.score2} </Text>
             </View>
-            <Text style={[{flex: 3, textAlign: 'left'}, styles.text]}>
-              {teamTwoName[0].club.nom}{' '}
+            <Text style={[{flex: 3, textAlign: 'left',}, styles.text(isClub)]}>
+              {teamTwoName[0].club.nom}
             </Text>
           </View>
         </View>,
@@ -104,6 +138,7 @@ export default Accordeon = props => {
     }
   }
 
+  //Affichages différents en fonction de l'onglet ouvert
   switch (tab) {
     case 0:
       if (rencontres) {
@@ -140,28 +175,28 @@ export default Accordeon = props => {
             <View style={styles.parentHr} />
             {expanded && (
               <View style={styles.child}>
-                <Text style={styles.text}>
+                <Text style={styles.text(isClub)}>
                   {title} - {detailsEquipe.club.code}
                 </Text>
                 <View>
-                  <Text style={styles.text}>
+                  <Text style={styles.text(isClub)}>
                     {detailsEquipe.club.correspondantClub.adresse1Corresp}
                   </Text>
-                  <Text style={styles.text}>
+                  <Text style={styles.text(isClub)}>
                     {detailsEquipe.club.correspondantClub.adresse2Corresp}
                   </Text>
-                  <Text style={styles.text}>{detailsEquipe.club.correspondantClub.nomCorresp}</Text>
+                  <Text style={styles.text(isClub)}>{detailsEquipe.club.correspondantClub.nomCorresp}</Text>
                 </View>
-                <Text style={styles.text}>
+                <Text style={styles.text(isClub)}>
                   {detailsEquipe.club.correspondantClub.telPortableCorresp}
                 </Text>
-                <Text style={styles.text}>{detailsEquipe.club.courriel}</Text>
+                <Text style={styles.text(isClub)}>{detailsEquipe.club.courriel}</Text>
               </View>
             )}
           </View>
         );
       } else {
-        return <Text style={styles.text}>Bientôt disponible</Text>;
+        return <Text style={styles.text(isClub)}>Bientôt disponible</Text>;
       }
       break;
     case 2:
@@ -229,7 +264,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.darker,
   },
-  text: {
-    color: Colors.darker,
-  },
+  text: (isClub) => ({
+    color: isClub ? '#D20A80' : Colors.darker ,
+  }),
+  textResult: (isClub) => ({
+    color: isClub ? '#D20A80' : Colors.darker ,
+    fontSize: 17,
+    fontWeight: isClub ? '600' : '400',
+    margin: 1
+  })
 });

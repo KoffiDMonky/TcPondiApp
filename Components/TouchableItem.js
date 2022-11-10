@@ -4,14 +4,17 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default TouchableItem = props => {
+  //Déclarations de variable
   let categorie;
   let teams;
   let icon;
 
+  //Propriété récupérées dans le composant
   const showTeamState = props.showTeamState;
   const heightItem = props.height;
   const shareCategorieTeam = props.shareCategorieTeam;
   const showDetailsState = props.showDetailsState;
+
   if (props.item) {
     categorie = props.item;
     icon = props.item.icon;
@@ -23,44 +26,46 @@ export default TouchableItem = props => {
 
     const displayPhases = [];
 
+    //Double boucle pour récupérer les différentes rencontres des différentes phases
     for (const [i, phase] of teams.phases.entries()) {
       const results = [];
-
       for (const [j, rencontre] of phase.rencontres.entries()) {
+
+        //Switch pour afficher une icône spécifique en fonction du résultat de la rencontre
         switch (rencontre) {
           case 'null':
             results.push(
               <Text key={j} style={{margin: 5}}>
                 <Icon name={'clock'} size={18} color={'black'} />,
-              </Text>
+              </Text>,
             );
             break;
           case 'V':
             results.push(
               <Text key={j} style={{margin: 5}}>
                 <Icon name={'trophy'} size={18} color={'green'} />,
-              </Text>
+              </Text>,
             );
             break;
           case 'D':
             results.push(
               <Text key={j} style={{margin: 5}}>
                 <Icon name={'thumbs-down'} size={18} color={'red'} />,
-              </Text>
+              </Text>,
             );
             break;
           case 'N':
             results.push(
               <Text key={j} style={{margin: 5}}>
                 <Icon name={'handshake'} size={18} color={'orange'} />,
-              </Text>
+              </Text>,
             );
             break;
           default:
             results.push(
               <Text key={j} style={{margin: 5}}>
                 <Icon name={'clock'} size={18} color={'black'} />,
-              </Text>
+              </Text>,
             );
             break;
         }
