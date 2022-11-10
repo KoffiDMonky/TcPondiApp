@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
   ActivityIndicator,
-  FlatList,
   Text,
   View,
   ScrollView,
-  Button,
   useWindowDimensions,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Picker from '@ouroboros/react-native-picker';
@@ -54,6 +54,12 @@ export default Detail = props => {
   //lignes du tableau contenant le classement
   const teamsRanking = [];
 
+  //Données des équipes
+  const team = props.team;
+
+  //Contient le nom de l'équipe sélectionné
+  const teamName = [];
+
   //Filtre d'objet
   Object.filter = (obj, predicate) =>
     Object.keys(obj)
@@ -67,17 +73,18 @@ export default Detail = props => {
       {...props}
       indicatorStyle={{backgroundColor: Colors.darker}}
       style={{backgroundColor: Colors.lighter}}
-      labelStyle={{color: Colors.darker}}
+      labelStyle={{color: Colors.darker, fontSize: 12}}
     />
   );
 
   //Contenu du tab 1 : rencontres
   const FirstRoute = () => (
     <ScrollView style={styles.tabContainer}>
-      <Button title="retour" onPress={() => setShowDetails(false)} />
-      <Text>{data.hLib}</Text>
-      <Text>{data.division}</Text>
-      {items}
+      <View style={styles.subtitleContainer}>
+        <Text style={styles.text}>{data.hLib}</Text>
+        <Text style={styles.textBold}>{data.division}</Text>
+      </View>
+      <View>{items}</View>
     </ScrollView>
   );
 
@@ -93,6 +100,7 @@ export default Detail = props => {
           borderRadius: 5,
           marginVertical: 5,
           padding: 5,
+          color: Colors.darker
         }}
         value={picker}
       />
@@ -114,6 +122,9 @@ export default Detail = props => {
           borderRadius: 5,
           marginVertical: 5,
           padding: 5,
+          color: Colors.darker,
+          // backgroundColor: 'yellow'
+          // flex: 1
         }}
         value={picker}
       />
@@ -141,6 +152,11 @@ export default Detail = props => {
   //On parcourt le tableau de phases
   if (phases) {
     for (const [i, phase] of phases.entries()) {
+      if (phase.detailsEquipes !== undefined) {
+        const dataTeam = team.filter(equipe => equipe.id === idEquipe);
+        teamName.push(dataTeam[0].nom);
+      }
+
       //Si l'on est dans le tab rencontres, on mets l'accordéon dans le tableau items
       if (index === 0) {
         items.push(
@@ -164,6 +180,7 @@ export default Detail = props => {
     const filterPhase = phases.filter(
       phase => phase.phase.phase.libelle === picker,
     );
+
     //Si l'on est dans le tab equipes et que le détail des équipes n'est pas indefini, on mets l'accordeon dans le tableau détailsEquipes
     if (index === 1) {
       for (const [i, phase] of filterPhase.entries()) {
@@ -182,9 +199,8 @@ export default Detail = props => {
 
     if (index === 2) {
       for (const [i, phase] of filterPhase.entries()) {
-
-        // console.log(phase.classements); 
-       const sortRanking = phase.classements.sort((a,b) => a.place - b.place);
+        //Tri du classement
+        const sortRanking = phase.classements.sort((a, b) => a.place - b.place);
 
         for (const [j, team] of sortRanking.entries()) {
           teamsRanking.push(
@@ -196,9 +212,9 @@ export default Detail = props => {
                 borderBottomWidth: 2,
                 paddingVertical: 12,
               }}>
-              <Text style={{flex: 1}}>N° {team.place}</Text>
-              <Text style={{flex: 3}}>{team.nom}</Text>
-              <Text style={{flex: 1}}>{team.points} pts</Text>
+              <Text style={[{flex: 1}, styles.textTable]}>N° {team.place}</Text>
+              <Text style={[{flex: 3}, styles.textTable]}>{team.nom}</Text>
+              <Text style={[{flex: 1}, styles.textTable]}>{team.points} pts</Text>
             </View>,
           );
         }
@@ -210,10 +226,30 @@ export default Detail = props => {
     getDetail();
   }, [idEquipe, idHomologation, idDivision]);
 
+  useEffect(() => {
+    if (data.phases !== undefined) {
+      setPicker(phases[0].phase.phase.libelle);
+    }
+  }, [data.phases]);
+
   return (
     <View style={{flex: 1}}>
       {isLoading ? (
-        <ActivityIndicator size={'large'} />
+        ''
+      ) : (
+        <TouchableOpacity
+          onPress={() => setShowDetails(false)}
+          style={styles.touchable}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Icon name={'chevron-left'} size={20} color={Colors.darker} />
+            <Text style={styles.text}>{teamName}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+      {isLoading ? (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size={'large'} />
+        </View>
       ) : (
         <TabView
           navigationState={{index, routes}}
@@ -231,5 +267,36 @@ export default Detail = props => {
 const styles = StyleSheet.create({
   tabContainer: {
     paddingHorizontal: 20,
+    paddingVertical: 15,
+    flex: 1,
+    // flexWrap: 'wrap',
+    width: '100%',
+    borderWidth: 2
+  },
+  subtitleContainer: {
+    marginBottom: 15,
+  },
+  touchable: {
+    marginBottom: 20,
+    marginLeft: 15,
+  },
+  text: {
+    textAlign: 'left',
+    color: Colors.darker,
+    fontSize: 15,
+    marginLeft: 5,
+  },
+  textBold: {
+    textAlign: 'left',
+    color: Colors.darker,
+    fontSize: 15,
+    marginLeft: 5,
+    fontWeight: '600'
+  },
+  textTable: {
+    textAlign: 'center',
+    color: Colors.darker,
+    fontSize: 15,
+    marginLeft: 5,
   },
 });

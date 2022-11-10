@@ -1,5 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Text, View} from 'react-native';
+import React from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  FlatList,
+  Text,
+  View,
+} from 'react-native';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TouchableItem from './TouchableItem';
 
 export default Categories = props => {
@@ -11,18 +18,52 @@ export default Categories = props => {
   return (
     <View style={{flex: 1, padding: 12}}>
       {isLoading ? (
-        <ActivityIndicator size ={'large'}/>
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size={'large'} />
+        </View>
       ) : (
-        <FlatList
-          numColumns={2}
-          style={{
-            flexGrow: 0
-          }}
-          data={cate}
-          keyExtractor={({id}, index) => id}
-          renderItem={({item}) => <TouchableItem height={150} item={item} showTeamState={showTeamState} shareCategorieTeam={shareCategorieTeam}/>}
-        />
+        <View
+          style={styles.container}>
+          <View style={styles.subtitleContainer}>
+            <Text style={styles.subtitle}>
+              Résultats championnats par équipe
+            </Text>
+          </View>
+          <FlatList
+            numColumns={2}
+            style={{
+              flexGrow: 1,
+            }}
+            data={cate}
+            keyExtractor={({id}, index) => id}
+            renderItem={({item}) => (
+              <TouchableItem
+                height={150}
+                item={item}
+                showTeamState={showTeamState}
+                shareCategorieTeam={shareCategorieTeam}
+              />
+            )}
+          />
+        </View>
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  subtitleContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 15
+  },
+  subtitle: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: Colors.darker
+  },
+});

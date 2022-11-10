@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+
 export default TouchableItem = props => {
   let categorie;
   let teams;
@@ -20,7 +22,6 @@ export default TouchableItem = props => {
     const setTeamParameter = props.setTeamParameter;
 
     const displayPhases = [];
-    // const phaseLength = teams.phases.length;
 
     for (const [i, phase] of teams.phases.entries()) {
       const results = [];
@@ -29,68 +30,48 @@ export default TouchableItem = props => {
         switch (rencontre) {
           case 'null':
             results.push(
-              <Icon
-                key={j}
-                name={'clock'}
-                size={20}
-                color={'black'}
-                style={{margin: 2}}
-              />,
+              <Text key={j} style={{margin: 5}}>
+                <Icon name={'clock'} size={18} color={'black'} />,
+              </Text>
             );
             break;
           case 'V':
             results.push(
-              <Icon
-                key={j}
-                name={'trophy'}
-                size={20}
-                color={'green'}
-                style={{margin: 2}}
-              />,
+              <Text key={j} style={{margin: 5}}>
+                <Icon name={'trophy'} size={18} color={'green'} />,
+              </Text>
             );
             break;
           case 'D':
             results.push(
-              <Icon
-                key={j}
-                name={'thumbs-down'}
-                size={20}
-                color={'red'}
-                style={{margin: 2}}
-              />,
+              <Text key={j} style={{margin: 5}}>
+                <Icon name={'thumbs-down'} size={18} color={'red'} />,
+              </Text>
             );
             break;
           case 'N':
             results.push(
-              <Icon
-                key={j}
-                name={'handshake'}
-                size={20}
-                color={'orange'}
-                style={{margin: 2}}
-              />,
+              <Text key={j} style={{margin: 5}}>
+                <Icon name={'handshake'} size={18} color={'orange'} />,
+              </Text>
             );
             break;
           default:
             results.push(
-              <Icon
-                key={j}
-                name={'clock'}
-                size={20}
-                color={'black'}
-                style={{margin: 2}}
-              />,
+              <Text key={j} style={{margin: 5}}>
+                <Icon name={'clock'} size={18} color={'black'} />,
+              </Text>
             );
             break;
         }
       }
 
       displayPhases.push(
-        <View key={i}>
-          <Text style={styles.title}>{phase.phase.phase.libelle}</Text>
-          <Text style={styles.title}>{phase.phase.poule.nom}</Text>
-          <View style={styles.results}>{results}</View>
-          {/* <Button title="Détails" onPress={() => showDetailsState(true)} /> */}
+        <View key={i} style={styles.bottomContainer}>
+          <Text style={styles.text}>{phase.phase.phase.libelle}</Text>
+          <Text style={styles.text}>
+            {phase.phase.poule.nom} : {results}
+          </Text>
         </View>,
       );
     }
@@ -100,12 +81,14 @@ export default TouchableItem = props => {
         style={[styles.card, {height: heightItem}]}
         onPress={() => {
           showDetailsState(true);
-          setTeamParameter(teams.id, teams.homologation.id, teams.division.id)
+          setTeamParameter(teams.id, teams.homologation.id, teams.division.id);
         }}>
         <View style={styles.container}>
-          <Text style={styles.title}>{teams.nom}</Text>
-          <Text style={styles.title}>{teams.homologation.libelle}</Text>
-          <Text style={styles.title}>{teams.division.nom}</Text>
+          <View style={styles.topContainer}>
+            <Text style={styles.title}>{teams.nom}</Text>
+            <Text style={styles.subTitle}>{teams.homologation.libelle}</Text>
+            <Text style={styles.subTitle}>{teams.division.nom}</Text>
+          </View>
           {displayPhases}
           <View style={{flexDirection: 'row'}}></View>
         </View>
@@ -132,14 +115,13 @@ export default TouchableItem = props => {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    backgroundColor: '#F6F6F6',
     borderColor: '#000000',
     color: '#20232a',
     justifyContent: 'center',
     margin: 5,
     borderWidth: 2,
     borderRadius: 15,
-    padding: 15
+    padding: 15,
   },
   container: {
     margin: 5,
@@ -147,11 +129,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  topContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    borderBottomWidth: 1,
+    borderBottomColor: '#cccccc',
+    paddingBottom: 10,
+    marginBottom: 10,
+  },
+  bottomContainer: {
+    alignItems: 'flex-start',
+  },
   title: {
     fontSize: 20,
-    color: 'black',
+    color: Colors.darker,
     borderColor: 'black',
     textAlign: 'center',
+    fontWeight: '600',
+  },
+  subTitle: {
+    color: Colors.darker,
+  },
+  text: {
+    fontSize: 15,
+    marginBottom: 2,
+    color: Colors.darker,
   },
   count: {
     fontSize: 20,

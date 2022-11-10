@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
@@ -22,10 +14,10 @@ import Categories from './Components/Categories';
 import Team from './Components/Team';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  // const isDarkMode = useColorScheme() === 'dark';
+  // const backgroundStyle = {
+  //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  // };
 
   //Permet d'afficher les équipes par catégorie
   const [showTeam, setShowTeam] = useState(false);
@@ -145,10 +137,10 @@ const App = () => {
   }, []);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView style={Colors.lighter}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        barStyle={'dark-content'}
+        backgroundColor={Colors.lighter}
       />
       <View style={styles.sectionContainer}>
         <View style={styles.header}>
@@ -195,13 +187,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 2,
     width: '100%',
-    // backgroundColor: 'yellow'
   },
   sectionContainer: {
-    // paddingHorizontal: 1,
     height: '100%',
-    // backgroundColor: 'orange'
-
+    backgroundColor: '#ffffff'
   },
   sectionTitle: {
     flex: 2,
@@ -210,17 +199,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: '600',
-    width: '50%'
+    width: '50%',
+    color: Colors.darker
   },
   sectionDescription: {
     fontSize: 18,
     fontWeight: '400',
-    flex: 12
-  },
-  categories: {
-    height: '100%',
-    width: '100%',
-    // backgroundColor: 'violet'
+    flex: 12,
   },
   logo: {
     width: 50,

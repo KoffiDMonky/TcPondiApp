@@ -1,7 +1,15 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, FlatList, View, Button} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {
+  StyleSheet,
+  Text,
+  FlatList,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import Detail from './Detail';
 import TouchableItem from './TouchableItem';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default Team = props => {
   const showTeamState = props.showTeamState;
@@ -33,11 +41,17 @@ export default Team = props => {
           idEquipe={idEquipe}
           idHomologation={idHomologation}
           idDivision={idDivision}
+          team={categoriesData}
         />
       ) : (
-        <View>
-          <Button title="retour" onPress={() => showTeamState(false)} />
-          <Text style={styles.text}>{categorieTeam}</Text>
+        <View style={{flex: 1}}>
+          <TouchableOpacity onPress={() => showTeamState(false)} style={styles.touchable}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Icon name={'chevron-left'} size={20} color={Colors.darker} />
+              <Text style={styles.text}>Catégories</Text>
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.subtitle}>{categorieTeam}</Text>
           <FlatList
             style={styles.flatlist}
             data={categoriesData}
@@ -62,14 +76,27 @@ export default Team = props => {
 const styles = StyleSheet.create({
   container: showDetails => ({
     flex: 1,
-    padding: showDetails === true ? 0 : 24,
+    padding: showDetails === true ? 0 : 12,
+    paddingBottom: 0,
     justifyContent: 'center',
   }),
+  touchable: {
+  },
   flatlist: {
     flexGrow: 0,
     width: '100%',
+    height: '100%',
+  },
+  subtitle: {
+    fontSize: 25,
+    textAlign: 'center',
+    color: Colors.darker,
+    margin: 10
   },
   text: {
     textAlign: 'center',
+    color: Colors.darker,
+    fontSize: 15,
+    marginLeft: 5
   },
 });

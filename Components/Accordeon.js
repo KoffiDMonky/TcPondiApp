@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   Text,
   View,
@@ -19,7 +18,7 @@ export default Accordeon = props => {
   const detailsEquipes = props.detailsEquipes;
   const detailsEquipe = props.detailsEquipe;
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -80,64 +79,30 @@ export default Accordeon = props => {
 
       meets.push(
         <View key={i} style={{flex: 1}}>
-          {displayDate && (
-            <Text style={{marginBottom: 5, marginTop: 15}}>{date}</Text>
-          )}
-          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={{flex: 3, textAlign:'right'}}>{teamOneName[0].club.nom}</Text>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}} >
-              <Text>{rencontre.score1}</Text>
-              <Text>-</Text>
-              <Text>{rencontre.score2} </Text>
+          {displayDate && <Text style={styles.date}>{date}</Text>}
+          <View style={styles.container}>
+            <Text style={[{flex: 3, textAlign: 'right'}, styles.text]}>
+              {teamOneName[0].club.nom}
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                margin: 18,
+              }}>
+              <Text style={styles.text}>{rencontre.score1}</Text>
+              <Text style={styles.text}>-</Text>
+              <Text style={styles.text}>{rencontre.score2} </Text>
             </View>
-            <Text style={{flex: 3, textAlign:'left'}}>{teamTwoName[0].club.nom} </Text>
+            <Text style={[{flex: 3, textAlign: 'left'}, styles.text]}>
+              {teamTwoName[0].club.nom}{' '}
+            </Text>
           </View>
         </View>,
       );
     }
   }
-
-  // const viewMeets = () => {
-  //   if (rencontres) {
-  //     return (
-  //       <View>
-  //         <TouchableOpacity style={styles.row} onPress={() => toggleExpand()}>
-  //           <Text style={[styles.title, styles.font]}>{title}</Text>
-  //           <Icon
-  //             name={expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
-  //             size={30}
-  //             color={'grey'}
-  //           />
-  //         </TouchableOpacity>
-  //         <View style={styles.parentHr} />
-  //         {expanded && <ScrollView style={styles.child}>{meets}</ScrollView>}
-  //       </View>
-  //     );
-  //   } else {
-  //     return <Text>Bientôt disponible</Text>;
-  //   }
-  // };
-
-  // const viewTeams = () => {
-  //   if (detailsEquipes) {
-  //     return (
-  //       <View>
-  //         <TouchableOpacity style={styles.row} onPress={() => toggleExpand()}>
-  //           <Text style={[styles.title, styles.font]}>{title}</Text>
-  //           <Icon
-  //             name={expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
-  //             size={30}
-  //             color={'grey'}
-  //           />
-  //         </TouchableOpacity>
-  //         <View style={styles.parentHr} />
-  //         {expanded && <ScrollView style={styles.child}>{meets}</ScrollView>}
-  //       </View>
-  //     );
-  //   } else {
-  //     return <Text>Bientôt disponible</Text>;
-  //   }
-  // };
 
   switch (tab) {
     case 0:
@@ -175,28 +140,28 @@ export default Accordeon = props => {
             <View style={styles.parentHr} />
             {expanded && (
               <View style={styles.child}>
-                <Text>
+                <Text style={styles.text}>
                   {title} - {detailsEquipe.club.code}
                 </Text>
                 <View>
-                  <Text>
+                  <Text style={styles.text}>
                     {detailsEquipe.club.correspondantClub.adresse1Corresp}
                   </Text>
-                  <Text>
+                  <Text style={styles.text}>
                     {detailsEquipe.club.correspondantClub.adresse2Corresp}
                   </Text>
-                  <Text>{detailsEquipe.club.correspondantClub.nomCorresp}</Text>
+                  <Text style={styles.text}>{detailsEquipe.club.correspondantClub.nomCorresp}</Text>
                 </View>
-                <Text>
+                <Text style={styles.text}>
                   {detailsEquipe.club.correspondantClub.telPortableCorresp}
                 </Text>
-                <Text>{detailsEquipe.club.courriel}</Text>
+                <Text style={styles.text}>{detailsEquipe.club.courriel}</Text>
               </View>
             )}
           </View>
         );
       } else {
-        return <Text>Bientôt disponible</Text>;
+        return <Text style={styles.text}>Bientôt disponible</Text>;
       }
       break;
     case 2:
@@ -208,6 +173,11 @@ export default Accordeon = props => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 14,
     fontWeight: 'bold',
@@ -240,6 +210,26 @@ const styles = StyleSheet.create({
   },
   child: {
     flex: 1,
-    marginBottom: 20
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+    borderBottomWidth: 2,
+    borderColor: Colors.lighter,
+    borderBottomEndRadius: 6,
+    borderBottomStartRadius: 6,
+  },
+  date: {
+    marginBottom: 5,
+    marginTop: 25,
+    marginBottom: 5,
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: Colors.darker,
+  },
+  text: {
+    color: Colors.darker,
   },
 });
