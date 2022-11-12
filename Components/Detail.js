@@ -8,12 +8,16 @@ import {
   useWindowDimensions,
   StyleSheet,
   TouchableOpacity,
+  Pressable,
+  Modal,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Picker from '@ouroboros/react-native-picker';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Accordeon from './Accordeon';
 import Ranking from './Ranking';
+import ScoreSheet from './ScoreSheet';
+import ResultItem from './ResultItem';
 
 export default Detail = props => {
   const setShowDetails = props.setShowDetails;
@@ -23,9 +27,29 @@ export default Detail = props => {
 
   //Affiche l'app quand la donnée est chargée
   const [isLoading, setLoading] = useState(true);
+  //Récupère les données de l'API
   const [data, setData] = useState([]);
   let paramPhases = [];
+  //Défini la valeur du selecteur
   let [picker, setPicker] = useState('PHASE PRELIMINAIRE');
+  //Gestion de la modale
+  const [modalVisible, setModalVisible] = useState(false);
+  const [scoreSheetId, setScoreSheetId] = useState('');
+  const [equipe1, setEquipe1] = useState('');
+  const [equipe2, setEquipe2] = useState('');
+  const [score1, setScore1] = useState('');
+  const [score2, setScore2] = useState('');
+
+  const setModal = (bool, id, equipe1, equipe2, score1, score2) => {
+    setModalVisible(bool);
+    setScoreSheetId(id);
+    setEquipe1(equipe1);
+    setEquipe2(equipe2);
+    setScore1(score1);
+    setScore2(score2);
+  };
+
+  const closeModal = bool => setModalVisible(bool);
 
   //Récupère les données du club
   const getDetail = async () => {
@@ -79,13 +103,37 @@ export default Detail = props => {
 
   //Contenu du tab 1 : rencontres
   const FirstRoute = () => (
-    <ScrollView style={styles.tabContainer}>
-      <View style={styles.subtitleContainer}>
-        <Text style={styles.text}>{data.hLib}</Text>
-        <Text style={styles.textBold}>{data.division}</Text>
-      </View>
-      <View>{items}</View>
-    </ScrollView>
+    <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <ScoreSheet
+              scoreSheetId={scoreSheetId}
+              idHomologation={idHomologation}
+              idDivision={idDivision}
+              equipe1={equipe1}
+              equipe2={equipe2}
+              score1={score1}
+              score2={score2}
+              setModalVisible={closeModal}
+            />
+          </View>
+        </View>
+      </Modal>
+      <ScrollView style={styles.tabContainer}>
+        <View style={styles.subtitleContainer}>
+          <Text style={styles.text}>{data.hLib}</Text>
+          <Text style={styles.textBold}>{data.division}</Text>
+        </View>
+        <View>{items}</View>
+      </ScrollView>
+    </View>
   );
 
   //Contenu du tab 2 : Equipes
@@ -166,6 +214,7 @@ export default Detail = props => {
             title={phase.phase.phase.libelle}
             rencontres={phase.rencontres}
             detailsEquipes={phase.detailsEquipes}
+            setModalVisible={setModal}
           />,
         );
       }
@@ -205,7 +254,6 @@ export default Detail = props => {
         let isClub = false;
 
         for (const [j, team] of sortRanking.entries()) {
-
           // Permet d'identifier le club
           const regex = /PONDI/g;
           const club = team.nom;
@@ -217,11 +265,13 @@ export default Detail = props => {
           }
 
           teamsRanking.push(
-            <View
-              key={j}
-              style={styles.row(isClub)}>
-              <Text style={[{flex: 1}, styles.textTable(isClub)]}>N° {team.place}</Text>
-              <Text style={[{flex: 3}, styles.textTable(isClub)]}>{team.nom}</Text>
+            <View key={j} style={styles.row(isClub)}>
+              <Text style={[{flex: 1}, styles.textTable(isClub)]}>
+                N° {team.place}
+              </Text>
+              <Text style={[{flex: 3}, styles.textTable(isClub)]}>
+                {team.nom}
+              </Text>
               <Text style={[{flex: 1}, styles.textTable(isClub)]}>
                 {team.points} pts
               </Text>
@@ -275,19 +325,23 @@ export default Detail = props => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+  },
   tabContainer: {
     paddingHorizontal: 20,
     paddingVertical: 15,
     flex: 1,
     width: '100%',
   },
-  row: (isClub) => ({
+  row: isClub => ({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 2,
     borderBottomColor: Colors.lighter,
     paddingVertical: 12,
-    backgroundColor: isClub ? '#A8DAE3' : '#ffffff' ,
+    backgroundColor: isClub ? '#b0e0e6' : '#ffffff',
   }),
   subtitleContainer: {
     marginBottom: 15,
@@ -309,11 +363,62 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontWeight: '600',
   },
-  textTable: (isClub) => ({
+  textTable: isClub => ({
     textAlign: 'center',
     color: isClub ? '#2292CC' : Colors.darker,
     fontSize: 15,
     marginLeft: 5,
     fontWeight: isClub ? '600' : '400',
   }),
+  //Rupture
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    width: '90%',
+    height: '90%',
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  pressableContainer: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  buttonClose: {
+    backgroundColor: '#ffffff',
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 99,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });

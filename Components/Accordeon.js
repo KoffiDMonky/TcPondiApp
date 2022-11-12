@@ -10,15 +10,17 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ResultItem from './ResultItem';
+import MeetDate from './MeetDate';
 
 export default Accordeon = props => {
-
   //Propriétés récupérées dans le composant
   const tab = props.tab;
   const title = props.title;
   const rencontres = props.rencontres;
   const detailsEquipes = props.detailsEquipes;
   const detailsEquipe = props.detailsEquipe;
+  const setModalVisible = props.setModalVisible;
 
   //Ouverture ou fermeture de l'accordéon
   const [expanded, setExpanded] = useState(true);
@@ -32,22 +34,6 @@ export default Accordeon = props => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpanded(!expanded);
   };
-
-  //Mois de l'années
-  const monthNames = [
-    'Janvier',
-    'Février',
-    'Mars',
-    'Avril',
-    'Mai',
-    'Juin',
-    'Juillet',
-    'Août',
-    'Septembre',
-    'octobre',
-    'Novembre',
-    'Décembre',
-  ];
 
   //Affichage de la date
   let displayDate = true;
@@ -65,20 +51,8 @@ export default Accordeon = props => {
   let isClub = false;
 
   if (rencontres) {
-
     //Boucle permettant de récupérer les rencontres
     for (const [i, rencontre] of rencontres.entries()) {
-
-      //Date récupéré sur le serveur
-      const serverDate = new Date(rencontre.dateTheorique);
-      //Récupération du jour
-      const day = serverDate.getDate();
-      //Récupération et traduction du mois
-      const month = monthNames[serverDate.getUTCMonth()];
-      //Récupération de l'année
-      const year = serverDate.getFullYear();
-      //Assemblage de la date
-      const date = (day + ' ' + month + ' ' + year).toString();
 
       //Permet d'afficher la date par groupe de rencontre
       if (
@@ -106,33 +80,32 @@ export default Accordeon = props => {
       isPondi2 = club2.match(regex);
 
       isClub = false;
-      if(isPondi1 !== null || isPondi2 !== null){
+      if (isPondi1 !== null || isPondi2 !== null) {
         isClub = true;
       }
+
+      //Identifiant de la feuille de match
+      const scoreSheetId = rencontre.idFeuilleDeMatch;
 
       //On envoie les rencontres dans le tableau meets
       meets.push(
         <View key={i} style={{flex: 1}}>
-          {displayDate && <Text style={styles.date}>{date}</Text>}
-          <View style={styles.container}>
-            <Text style={[{flex: 3, textAlign: 'right'}, styles.text(isClub)]}>
-              {teamOneName[0].club.nom}
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                margin: 18,
-              }}>
-              <Text style={styles.textResult(isClub)}>{rencontre.score1}</Text>
-              <Text style={styles.textResult(isClub)}>-</Text>
-              <Text style={styles.textResult(isClub)}>{rencontre.score2} </Text>
-            </View>
-            <Text style={[{flex: 3, textAlign: 'left',}, styles.text(isClub)]}>
-              {teamTwoName[0].club.nom}
-            </Text>
-          </View>
+          {displayDate && <MeetDate dateTheorique={rencontre.dateTheorique} />}
+          {scoreSheetId ? (<TouchableOpacity id={scoreSheetId} onPress={() => setModalVisible(true,scoreSheetId,teamOneName[0].club.nom,teamTwoName[0].club.nom, rencontre.score1, rencontre.score2)}>
+            <ResultItem 
+            equipe1={teamOneName[0].club.nom}
+            equipe2={teamTwoName[0].club.nom}
+            score1={rencontre.score1}
+            score2={rencontre.score2}
+            isClub={isClub}
+            />
+          </TouchableOpacity>) : (            <ResultItem 
+            equipe1={teamOneName[0].club.nom}
+            equipe2={teamTwoName[0].club.nom}
+            score1={rencontre.score1}
+            score2={rencontre.score2}
+            isClub={isClub}
+            />)}
         </View>,
       );
     }
@@ -185,12 +158,16 @@ export default Accordeon = props => {
                   <Text style={styles.text(isClub)}>
                     {detailsEquipe.club.correspondantClub.adresse2Corresp}
                   </Text>
-                  <Text style={styles.text(isClub)}>{detailsEquipe.club.correspondantClub.nomCorresp}</Text>
+                  <Text style={styles.text(isClub)}>
+                    {detailsEquipe.club.correspondantClub.nomCorresp}
+                  </Text>
                 </View>
                 <Text style={styles.text(isClub)}>
                   {detailsEquipe.club.correspondantClub.telPortableCorresp}
                 </Text>
-                <Text style={styles.text(isClub)}>{detailsEquipe.club.courriel}</Text>
+                <Text style={styles.text(isClub)}>
+                  {detailsEquipe.club.courriel}
+                </Text>
               </View>
             )}
           </View>
@@ -264,13 +241,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.darker,
   },
-  text: (isClub) => ({
-    color: isClub ? '#D20A80' : Colors.darker ,
+  text: isClub => ({
+    color: isClub ? '#D20A80' : Colors.darker,
   }),
-  textResult: (isClub) => ({
-    color: isClub ? '#D20A80' : Colors.darker ,
+  textResult: isClub => ({
+    color: isClub ? '#D20A80' : Colors.darker,
     fontSize: 17,
     fontWeight: isClub ? '600' : '400',
-    margin: 1
-  })
+    margin: 1,
+  }),
 });
