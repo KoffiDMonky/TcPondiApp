@@ -100,6 +100,14 @@ export default TouchableItem = props => {
       </TouchableOpacity>
     );
   } else if (categorie.length) {
+    let equipe;
+
+    if(categorie.length <= 1){
+      equipe = 'équipe'
+    } else {
+      equipe = 'équipes'
+    }
+
     return (
       <TouchableOpacity
         style={[styles.card, {height: heightItem}]}
@@ -109,7 +117,7 @@ export default TouchableItem = props => {
         }}>
         <View style={styles.container}>
           <Text style={styles.title}>{categorie.libelle}</Text>
-          <Text style={styles.count}>({categorie.length})</Text>
+          <Text style={styles.count}>{categorie.length} {equipe}</Text>
           <Icon name={icon.glyph} size={50} color={icon.color} />
         </View>
       </TouchableOpacity>

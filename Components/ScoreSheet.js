@@ -49,50 +49,25 @@ export default ScoreSheet = props => {
 
   if (matches) {
     for (const [i, match] of matches.entries()) {
+
       ScoreSheetResult.push(
-        <View style = {{width: '100%', marginVertical: 5, borderWidth: 1, borderRadius: 10}}>
-          <PlayerTeam joueur1={match.joueur1Equipe1} joueur2={match.joueur2Equipe1} score1={match.score1Equipe1} score2={match.score2Equipe1} result = {match.resultat}/>
-          <PlayerTeam joueur1={match.joueur1Equipe2} joueur2={match.joueur2Equipe2} score1={match.score1Equipe2} score2={match.score2Equipe2} result = {match.resultat}/>
-          {/* <View style={[styles.container, {flexDirection: 'row'}]}>
-            <Text style={[{flex: 3, textAlign: 'right'}, styles.text]}>
-              {match.joueur1Equipe1.nom} {match.joueur1Equipe1.prenom}
-            </Text>
-
-            <Text style={[{flex: 3, textAlign: 'right'}, styles.text]}>
-              {match.joueur1Equipe1.classement}
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                margin: 18,
-              }}>
-              <Text style={styles.textBold}>
-                {match.score1Equipe1} {match.score2Equipe1}
-              </Text>
-            </View>
-          </View> */}
-          {/* <View style={[styles.container, {flexDirection: 'row'}]}>
-            <Text style={[{flex: 3, textAlign: 'right'}, styles.text]}>
-              {match.joueur1Equipe2.nom} {match.joueur1Equipe2.prenom}
-            </Text>
-
-            <Text style={[{flex: 3, textAlign: 'right'}, styles.text]}>
-              {match.joueur1Equipe2.classement}
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                margin: 18,
-              }}>
-              <Text style={styles.textBold}>
-                {match.score1Equipe2} {match.score2Equipe2}
-              </Text>
-            </View>
-          </View> */}
+        <View key={i} style={styles.playerTeamContainer}>
+          <PlayerTeam
+            joueur1={match.joueur1Equipe1}
+            joueur2={match.joueur2Equipe1}
+            score1={match.score1Equipe1}
+            score2={match.score2Equipe1}
+            score3={match.score3Equipe1}
+            result={match.resultat === "V" && match.resultat}
+          />
+          <PlayerTeam
+            joueur1={match.joueur1Equipe2}
+            joueur2={match.joueur2Equipe2}
+            score1={match.score1Equipe2}
+            score2={match.score2Equipe2}
+            score3={match.score3Equipe2}
+            result={match.resultat === "D" && match.resultat}
+          />
         </View>,
       );
     }
@@ -125,9 +100,7 @@ export default ScoreSheet = props => {
             score2={score2}
           />
           <View style={styles.scoreContainer}>
-            <ScrollView>
-              {ScoreSheetResult}
-            </ScrollView>
+            <ScrollView>{ScoreSheetResult}</ScrollView>
           </View>
         </View>
       )}
@@ -152,8 +125,15 @@ const styles = StyleSheet.create({
   scoreContainer: {
     flex: 4,
     borderTopWidth: 2,
-    borderTopColor: Colors.darker,
+    borderTopColor: '#8ABC30',
     width: '100%',
+    paddingTop: 20,
+  },
+  playerTeamContainer: {
+    width: '100%',
+    marginVertical: 5,
+    backgroundColor: Colors.lighter,
+    borderRadius: 10,
   },
   buttonClose: {
     backgroundColor: '#ffffff',

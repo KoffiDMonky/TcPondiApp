@@ -53,7 +53,6 @@ export default Accordeon = props => {
   if (rencontres) {
     //Boucle permettant de récupérer les rencontres
     for (const [i, rencontre] of rencontres.entries()) {
-
       //Permet d'afficher la date par groupe de rencontre
       if (
         rencontres[i - 1] !== undefined &&
@@ -91,21 +90,36 @@ export default Accordeon = props => {
       meets.push(
         <View key={i} style={{flex: 1}}>
           {displayDate && <MeetDate dateTheorique={rencontre.dateTheorique} />}
-          {scoreSheetId ? (<TouchableOpacity id={scoreSheetId} onPress={() => setModalVisible(true,scoreSheetId,teamOneName[0].club.nom,teamTwoName[0].club.nom, rencontre.score1, rencontre.score2)}>
-            <ResultItem 
-            equipe1={teamOneName[0].club.nom}
-            equipe2={teamTwoName[0].club.nom}
-            score1={rencontre.score1}
-            score2={rencontre.score2}
-            isClub={isClub}
+          {scoreSheetId ? (
+            <TouchableOpacity
+              id={scoreSheetId}
+              onPress={() =>
+                setModalVisible(
+                  true,
+                  scoreSheetId,
+                  teamOneName[0].club.nom,
+                  teamTwoName[0].club.nom,
+                  rencontre.score1,
+                  rencontre.score2,
+                )
+              }>
+              <ResultItem
+                equipe1={teamOneName[0].club.nom}
+                equipe2={teamTwoName[0].club.nom}
+                score1={rencontre.score1}
+                score2={rencontre.score2}
+                isClub={isClub}
+              />
+            </TouchableOpacity>
+          ) : (
+            <ResultItem
+              equipe1={teamOneName[0].club.nom}
+              equipe2={teamTwoName[0].club.nom}
+              score1={rencontre.score1}
+              score2={rencontre.score2}
+              isClub={isClub}
             />
-          </TouchableOpacity>) : (            <ResultItem 
-            equipe1={teamOneName[0].club.nom}
-            equipe2={teamTwoName[0].club.nom}
-            score1={rencontre.score1}
-            score2={rencontre.score2}
-            isClub={isClub}
-            />)}
+          )}
         </View>,
       );
     }
@@ -148,32 +162,48 @@ export default Accordeon = props => {
             <View style={styles.parentHr} />
             {expanded && (
               <View style={styles.child}>
-                <Text style={styles.text(isClub)}>
-                  {title} - {detailsEquipe.club.code}
+                <Text style={styles.textCorrespondant}>
+                  Code club: {detailsEquipe.club.code}
                 </Text>
                 <View>
-                  <Text style={styles.text(isClub)}>
-                    {detailsEquipe.club.correspondantClub.adresse1Corresp}
+                  {detailsEquipe.club.correspondantClub.adresse1Corresp && (
+                    <Text style={styles.textCorrespondant}>
+                      {detailsEquipe.club.correspondantClub.adresse1Corresp}
+                    </Text>
+                  )}
+                  {detailsEquipe.club.correspondantClub.adresse2Corresp && (
+                    <Text style={styles.textCorrespondant}>
+                      {detailsEquipe.club.correspondantClub.adresse2Corresp}
+                    </Text>
+                  )}
+                  <Text style={styles.textCorrespondant}>
+                    Ville: {detailsEquipe.club.correspondantClub.villeCorresp}
                   </Text>
-                  <Text style={styles.text(isClub)}>
-                    {detailsEquipe.club.correspondantClub.adresse2Corresp}
-                  </Text>
-                  <Text style={styles.text(isClub)}>
-                    {detailsEquipe.club.correspondantClub.nomCorresp}
+                  <Text style={styles.textCorrespondant}>
+                    Correspondant: {detailsEquipe.correspondant.nom}
                   </Text>
                 </View>
-                <Text style={styles.text(isClub)}>
-                  {detailsEquipe.club.correspondantClub.telPortableCorresp}
-                </Text>
-                <Text style={styles.text(isClub)}>
-                  {detailsEquipe.club.courriel}
-                </Text>
+                {detailsEquipe.correspondant.telPortable && (
+                  <Text style={styles.textCorrespondant}>
+                    Portable: {detailsEquipe.correspondant.telPortable}
+                  </Text>
+                )}
+                {detailsEquipe.correspondant.telPerso && (
+                  <Text style={styles.textCorrespondant}>
+                    Fixe: {detailsEquipe.correspondant.telPerso}
+                  </Text>
+                )}
+                {detailsEquipe.correspondant.email && (
+                  <Text style={styles.textCorrespondant}>
+                    Email: {detailsEquipe.correspondant.email}
+                  </Text>
+                )}
               </View>
             )}
           </View>
         );
       } else {
-        return <Text style={styles.text(isClub)}>Bientôt disponible</Text>;
+        return <Text style={styles.textCorrespondant}>Bientôt disponible</Text>;
       }
       break;
     case 2:
@@ -250,4 +280,9 @@ const styles = StyleSheet.create({
     fontWeight: isClub ? '600' : '400',
     margin: 1,
   }),
+  textCorrespondant: {
+    color: Colors.darker,
+    margin: 5,
+    fontSize: 15,
+  },
 });
