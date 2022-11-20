@@ -10,7 +10,6 @@ import {
 import Detail from './Detail';
 import TouchableItem from './TouchableItem';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Test from './Test';
 
 export default Team = props => {
 
