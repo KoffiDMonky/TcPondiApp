@@ -10,20 +10,28 @@ export default PlayerTeam = props => {
   const score3 = props.score3;
   const result = props.result;
 
+  console.log(joueur1);
+  console.log(joueur2);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerPlayers}>
         <View style={styles.containerPlayer}>
-          <Text style={styles.player(result)}>
+        {joueur1.nom ? (<Text style={styles.player(result)}>
             {joueur1.nom} {joueur1.prenom}
-          </Text>
+          </Text>) :
+          (<Text style={styles.player(result)}>
+            Joueur anonyme
+          </Text>)}
           <Text style={styles.classement(result)}>{joueur1.classement}</Text>
         </View>
         {joueur2 && (
           <View style={styles.containerPlayer}>
-            <Text style={styles.player(result)}>
+            {joueur2.nom ? (<Text style={styles.player(result)}>
               {joueur2.nom} {joueur2.prenom}
-            </Text>
+            </Text>) : (<Text style={styles.player(result)}>
+              Joueur anonyme
+            </Text>)}
             <Text style={styles.classement(result)}>{joueur2.classement}</Text>
           </View>
         )}
