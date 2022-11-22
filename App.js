@@ -4,9 +4,10 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  BackHandler,
   View,
   Image,
+  Alert
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -132,8 +133,27 @@ const App = () => {
       categoriesData = [];
   }
 
+  const backAction = () => {
+    Alert.alert("Op là!", "Est-tu sur de vouloir quitter TC Pondi App ?", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel"
+      },
+      { text: "YES", onPress: () => BackHandler.exitApp() }
+    ]);
+    return true;
+  };
+
   useEffect(() => {
     getTcPondi();
+  }, []);
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", backAction);
+
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", backAction);
   }, []);
 
   return (
